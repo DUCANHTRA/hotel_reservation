@@ -1,16 +1,33 @@
-# React + Vite
+To run this project, you need to set up your Firebase configuration. Please create a `.env` file in the root directory of the project with the following variables:
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+VITE_FIREBASE_API_KEY=your_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_auth_domain
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+VITE_FIREBASE_MEASUREMENT_ID=your_measurement_id
 
-Currently, two official plugins are available:
+Replace `your_api_key`, `your_auth_domain`, etc., with your actual Firebase project credentials.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Once the `.env` file is configured, you can start the application using:
 
-## React Compiler
+```bash
+npm run dev
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+This will start the development server, and you can access the application in your browser, usually at `http://localhost:5173`.
 
-## Expanding the ESLint configuration
+**Important Firestore Setup:**
+Make sure you have a Firestore database set up in your Firebase project. The application expects the following collections:
+- `Users`: To store user roles (guest/admin).
+- `Hotels`: To store hotel information.
+- `Rooms`: To store room details, linked to hotels via `hotelId`.
+- `Bookings`: To store booking records, linked to users and rooms.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+You might need to manually add some initial data to these collections for testing purposes, especially for hotels and rooms, to see them displayed in the UI.
+
+**Admin User Setup:**
+To test the admin functionalities, you will need to:
+1. Register a new user through the application.
+2. Manually change the `role` field of this user to `admin` in your Firebase Firestore `Users` collection. This will grant them access to the Admin Dashboard.
