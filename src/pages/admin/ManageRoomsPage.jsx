@@ -43,7 +43,7 @@ const ManageRoomsPage = () => {
       type: room.type,
       pricePerNight: room.pricePerNight,
       capacity: room.capacity,
-      amenities: room.amenities,
+      amenities: room.amenities || [],
     });
     setIsModalOpen(true);
   };
@@ -59,17 +59,44 @@ const ManageRoomsPage = () => {
 
   const handleAmenitiesChange = (e) => {
     const { value } = e.target;
-    setFormData((prev) => ({ ...prev, amenities: value.split(',').map((a) => a.trim()) }));
+    const amenities = value.split(',').map((a) => a.trim()).filter(Boolean);
+    setFormData((prev) => ({ ...prev, amenities }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (currentRoom) {
-      updateRoom({ roomId: currentRoom.id, roomData: formData });
-    } else {
-      addRoom(formData);
+
+    const capacity = parseInt(formData.capacity, 10);
+    const pricePerNight = parseFloat(formData.pricePerNight);
+
+    if (isNaN(capacity) || isNaN(pricePerNight)) {
+      alert('Please enter valid numbers for capacity and price per night.');
+      return;
     }
-    closeModal();
+
+    const roomData = {
+      ...formData,
+      capacity,
+      pricePerNight,
+    };
+    
+    const mutationOptions = {
+      onSuccess: () => {
+        closeModal();
+      },
+      onError: (error) => {
+        alert(`Operation failed: ${error.message}`);
+        console.error("Mutation failed:", error);
+      }
+    };
+
+    if (currentRoom) {
+      console.log("Submitting room update:", { roomId: currentRoom.id, roomData });
+      updateRoom({ roomId: currentRoom.id, roomData }, mutationOptions);
+    } else {
+      console.log("Submitting new room:", roomData);
+      addRoom(roomData, mutationOptions);
+    }
   };
 
   const handleDelete = (roomId) => {

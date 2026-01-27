@@ -40,7 +40,7 @@ const ManageHotelsPage = () => {
       location: hotel.location,
       description: hotel.description,
       rating: hotel.rating,
-      images: hotel.images,
+      images: hotel.images || [],
       pricePerNight: hotel.pricePerNight,
     });
     setIsModalOpen(true);
@@ -57,17 +57,44 @@ const ManageHotelsPage = () => {
 
   const handleImageChange = (e) => {
     const { value } = e.target;
-    setFormData((prev) => ({ ...prev, images: value.split(',').map((img) => img.trim()) }));
+    const images = value.split(',').map((img) => img.trim()).filter(Boolean);
+    setFormData((prev) => ({ ...prev, images }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (currentHotel) {
-      updateHotel({ hotelId: currentHotel.id, hotelData: formData });
-    } else {
-      addHotel(formData);
+    
+    const rating = parseFloat(formData.rating);
+    const pricePerNight = parseFloat(formData.pricePerNight);
+
+    if (isNaN(rating) || isNaN(pricePerNight)) {
+      alert('Please enter valid numbers for rating and price per night.');
+      return;
     }
-    closeModal();
+
+    const hotelData = {
+      ...formData,
+      rating,
+      pricePerNight,
+    };
+
+    const mutationOptions = {
+      onSuccess: () => {
+        closeModal();
+      },
+      onError: (error) => {
+        alert(`Operation failed: ${error.message}`);
+        console.error("Mutation failed:", error);
+      }
+    };
+
+    if (currentHotel) {
+      console.log("Submitting hotel update:", { hotelId: currentHotel.id, hotelData });
+      updateHotel({ hotelId: currentHotel.id, hotelData }, mutationOptions);
+    } else {
+      console.log("Submitting new hotel:", hotelData);
+      addHotel(hotelData, mutationOptions);
+    }
   };
 
   const handleDelete = (hotelId) => {
