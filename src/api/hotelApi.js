@@ -43,26 +43,47 @@ export const deleteHotel = async (hotelId) => {
 };
 
 export const getFilteredHotels = async (filters) => {
-  const hotelsCollectionRef = collection(db, 'Hotels');
+  const hotelsCollectionRef = collection(db, 'Hotels'); 
   let q = query(hotelsCollectionRef);
 
-  if (filters.location) {
-    q = query(q, where('location', '==', filters.location));
+  const { location, minRating, minPrice, maxPrice } = filters;
+  let clientSideRatingFilter = false;
+  let ratingValue = 0; // Default or parsed value for client-side filtering
+
+  if (location) {
+    q = query(q, where('location', '==', location));
   }
-  if (filters.minRating) {
-    q = query(q, where('rating', '>=', parseFloat(filters.minRating)));
+
+  // Apply price filters first, as they are often more selective
+  if (minPrice) {
+    q = query(q, where('pricePerNight', '>=', parseFloat(minPrice)));
   }
-  if (filters.minPrice) {
-    q = query(q, where('pricePerNight', '>=', parseFloat(filters.minPrice)));
+  if (maxPrice) {
+    q = query(q, where('pricePerNight', '<=', parseFloat(maxPrice)));
   }
-  if (filters.maxPrice) {
-    q = query(q, where('pricePerNight', '<=', parseFloat(filters.maxPrice)));
+
+  // If a minRating is present, and we already have price range filters,
+  // we must apply rating filter client-side to avoid Firestore's multi-range query limitation.
+  if (minRating) {
+    if (minPrice || maxPrice) {
+      clientSideRatingFilter = true;
+      ratingValue = parseFloat(minRating);
+    } else {
+      // No price filters, so we can apply rating filter directly to Firestore query
+      q = query(q, where('rating', '>=', parseFloat(minRating)));
+    }
   }
 
   const querySnapshot = await getDocs(q);
-  const hotels = querySnapshot.docs.map(doc => ({
+  let hotels = querySnapshot.docs.map(doc => ({
     id: doc.id,
     ...doc.data(),
   }));
+
+  // Apply client-side rating filter if needed
+  if (clientSideRatingFilter) {
+    hotels = hotels.filter(hotel => hotel.rating >= ratingValue);
+  }
+
   return hotels;
 };
