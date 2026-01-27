@@ -84,15 +84,15 @@ const ManageHotelsPage = () => {
       },
       onError: (error) => {
         alert(`Operation failed: ${error.message}`);
-        console.error("Mutation failed:", error);
+        // console.error("Mutation failed:", error);
       }
     };
 
     if (currentHotel) {
-      console.log("Submitting hotel update:", { hotelId: currentHotel.id, hotelData });
+      // console.log("Submitting hotel update:", { hotelId: currentHotel.id, hotelData });
       updateHotel({ hotelId: currentHotel.id, hotelData }, mutationOptions);
     } else {
-      console.log("Submitting new hotel:", hotelData);
+      // console.log("Submitting new hotel:", hotelData);
       addHotel(hotelData, mutationOptions);
     }
   };

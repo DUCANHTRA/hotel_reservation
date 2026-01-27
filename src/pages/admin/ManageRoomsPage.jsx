@@ -86,15 +86,15 @@ const ManageRoomsPage = () => {
       },
       onError: (error) => {
         alert(`Operation failed: ${error.message}`);
-        console.error("Mutation failed:", error);
+        // console.error("Mutation failed:", error);
       }
     };
 
     if (currentRoom) {
-      console.log("Submitting room update:", { roomId: currentRoom.id, roomData });
+      // console.log("Submitting room update:", { roomId: currentRoom.id, roomData });
       updateRoom({ roomId: currentRoom.id, roomData }, mutationOptions);
     } else {
-      console.log("Submitting new room:", roomData);
+      // console.log("Submitting new room:", roomData);
       addRoom(roomData, mutationOptions);
     }
   };

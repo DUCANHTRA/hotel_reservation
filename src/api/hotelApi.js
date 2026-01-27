@@ -32,16 +32,16 @@ export const addHotel = async (hotelData) => {
 
 export const updateHotel = async ({ hotelId, hotelData }) => {
   try {
-    console.log("Attempting to update hotel:", hotelId, "with data:", hotelData);
+    // console.log("Attempting to update hotel:", hotelId, "with data:", hotelData);
     if (!hotelId) {
       throw new Error("updateHotel requires a hotelId.");
     }
     const hotelDocRef = doc(db, 'Hotels', hotelId);
     await updateDoc(hotelDocRef, hotelData);
-    console.log("Hotel updated successfully:", hotelId);
+    // console.log("Hotel updated successfully:", hotelId);
     return { id: hotelId, ...hotelData };
   } catch (error) {
-    console.error("Error updating hotel in API:", error);
+    // console.error("Error updating hotel in API:", error);
     throw error;
   }
 };
