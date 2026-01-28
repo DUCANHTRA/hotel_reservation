@@ -1,30 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFilteredHotels } from '../hooks/hotelHooks';
 import HotelCard from '../components/HotelCard';
 import Navbar from '../components/Navbar';
 
 const HotelListingPage = () => {
-  const [filterInputs, setFilterInputs] = useState({
+  const [filters, setFilters] = useState({
     location: '',
     minRating: '',
     minPrice: '',
     maxPrice: '',
   });
-  const [appliedFilters, setAppliedFilters] = useState({
-    location: '',
-    minRating: '',
-    minPrice: '',
-    maxPrice: '',
-  });
-  const { data: hotels, isLoading, isError, error } = useFilteredHotels(appliedFilters);
+  const [debouncedFilters, setDebouncedFilters] = useState(filters);
+  const { data: hotels, isLoading, isError, error } = useFilteredHotels(debouncedFilters);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedFilters(filters);
+    }, 780); // 500ms debounce delay
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [filters]);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    setFilterInputs((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleFilterSubmit = () => {
-    setAppliedFilters(filterInputs);
+    setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
   if (isLoading) return <div className="text-center mt-8 text-xl">Loading hotels...</div>;
@@ -48,7 +49,7 @@ const HotelListingPage = () => {
                 type="text"
                 id="location"
                 name="location"
-                value={filterInputs.location}
+                value={filters.location}
                 onChange={handleFilterChange}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="e.g., New York"
@@ -61,7 +62,7 @@ const HotelListingPage = () => {
               <select
                 id="minRating"
                 name="minRating"
-                value={filterInputs.minRating}
+                value={filters.minRating}
                 onChange={handleFilterChange}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
@@ -81,7 +82,7 @@ const HotelListingPage = () => {
                 type="number"
                 id="minPrice"
                 name="minPrice"
-                value={filterInputs.minPrice}
+                value={filters.minPrice}
                 onChange={handleFilterChange}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="e.g., 50"
@@ -95,20 +96,12 @@ const HotelListingPage = () => {
                 type="number"
 id="maxPrice"
                 name="maxPrice"
-                value={filterInputs.maxPrice}
+                value={filters.maxPrice}
                 onChange={handleFilterChange}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="e.g., 200"
               />
             </div>
-          </div>
-          <div className="flex justify-end mt-6">
-            <button
-              onClick={handleFilterSubmit}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
-            >
-              Filter
-            </button>
           </div>
         </div>
 

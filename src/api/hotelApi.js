@@ -53,35 +53,23 @@ export const deleteHotel = async (hotelId) => {
 };
 
 export const getFilteredHotels = async (filters) => {
-  const hotelsCollectionRef = collection(db, 'Hotels'); 
+  const hotelsCollectionRef = collection(db, 'Hotels');
   let q = query(hotelsCollectionRef);
 
   const { location, minRating, minPrice, maxPrice } = filters;
-  let clientSideRatingFilter = false;
-  let ratingValue = 0; // Default or parsed value for client-side filtering
+  let clientSideFilters = [];
 
   if (location) {
-    q = query(q, where('location', '==', location));
-  }
-
-  // Apply price filters first, as they are often more selective
-  if (minPrice) {
-    q = query(q, where('pricePerNight', '>=', parseFloat(minPrice)));
-  }
-  if (maxPrice) {
-    q = query(q, where('pricePerNight', '<=', parseFloat(maxPrice)));
-  }
-
-  // If a minRating is present, and we already have price range filters,
-  // we must apply rating filter client-side to avoid Firestore's multi-range query limitation.
-  if (minRating) {
-    if (minPrice || maxPrice) {
-      clientSideRatingFilter = true;
-      ratingValue = parseFloat(minRating);
-    } else {
-      // No price filters, so we can apply rating filter directly to Firestore query
-      q = query(q, where('rating', '>=', parseFloat(minRating)));
-    }
+    q = query(q, where('location', '>=', location), where('location', '<=', location + '\uf8ff'));
+    if (minPrice) clientSideFilters.push(hotel => hotel.pricePerNight >= parseFloat(minPrice));
+    if (maxPrice) clientSideFilters.push(hotel => hotel.pricePerNight <= parseFloat(maxPrice));
+    if (minRating) clientSideFilters.push(hotel => hotel.rating >= parseFloat(minRating));
+  } else if (minPrice || maxPrice) {
+    if (minPrice) q = query(q, where('pricePerNight', '>=', parseFloat(minPrice)));
+    if (maxPrice) q = query(q, where('pricePerNight', '<=', parseFloat(maxPrice)));
+    if (minRating) clientSideFilters.push(hotel => hotel.rating >= parseFloat(minRating));
+  } else if (minRating) {
+    q = query(q, where('rating', '>=', parseFloat(minRating)));
   }
 
   const querySnapshot = await getDocs(q);
@@ -90,9 +78,8 @@ export const getFilteredHotels = async (filters) => {
     ...doc.data(),
   }));
 
-  // Apply client-side rating filter if needed
-  if (clientSideRatingFilter) {
-    hotels = hotels.filter(hotel => hotel.rating >= ratingValue);
+  if (clientSideFilters.length > 0) {
+    hotels = hotels.filter(hotel => clientSideFilters.every(fn => fn(hotel)));
   }
 
   return hotels;
