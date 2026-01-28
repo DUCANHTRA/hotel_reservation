@@ -174,10 +174,3 @@ In the project directory, you can run:
 *   **`npm run lint`**: Runs ESLint to check for code quality issues and potential errors.
 *   **`npm run preview`**: Serves the `dist` folder locally, allowing you to preview your production build.
 
-## Contributing
-
-Contributions are welcome! If you have suggestions or want to improve the project, please open an issue or submit a pull request.
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
