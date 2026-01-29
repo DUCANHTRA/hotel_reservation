@@ -10,14 +10,14 @@ const ManageHotelsPage = () => {
   const { mutate: deleteHotel } = useDeleteHotel();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentHotel, setCurrentHotel] = useState(null); // For editing
+  const [currentHotel, setCurrentHotel] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
     location: '',
     description: '',
     rating: '',
     images: [],
-    pricePerNight: '', // Assuming a default price for new hotels
+    pricePerNight: '',
   });
 
   const openAddModal = () => {
@@ -84,15 +84,12 @@ const ManageHotelsPage = () => {
       },
       onError: (error) => {
         alert(`Operation failed: ${error.message}`);
-        // console.error("Mutation failed:", error);
       }
     };
 
     if (currentHotel) {
-      // console.log("Submitting hotel update:", { hotelId: currentHotel.id, hotelData });
       updateHotel({ hotelId: currentHotel.id, hotelData }, mutationOptions);
     } else {
-      // console.log("Submitting new hotel:", hotelData);
       addHotel(hotelData, mutationOptions);
     }
   };

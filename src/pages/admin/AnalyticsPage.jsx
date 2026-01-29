@@ -4,7 +4,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Toolti
 import Navbar from '../../components/Navbar';
 import { useBookingsOverTime, useMostBookedHotels, useTotalUsers, useTotalBookings, useOccupancyPerHotel } from '../../hooks/analyticsHooks';
 
-// Register Chart.js components
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -27,7 +27,6 @@ const AnalyticsPage = () => {
   if (loadingBot || loadingMbh || loadingTu || loadingTb || loadingOph) return <div className="text-center mt-8 text-xl">Loading analytics...</div>;
   if (errorBot || errorMbh || errorTu || errorTb || errorOph) return <div className="text-center mt-8 text-red-500 text-xl">Error loading analytics data.</div>;
 
-  // Data for Bookings Over Time (Line Chart)
   const bookingsOverTimeData = {
     labels: bookingsOverTime?.map(data => data.date) || [],
     datasets: [
@@ -41,7 +40,6 @@ const AnalyticsPage = () => {
     ],
   };
 
-  // Data for Most Booked Hotels (Bar Chart)
   const mostBookedHotelsData = {
     labels: mostBookedHotels?.map(data => data.hotelName) || [],
     datasets: [
@@ -53,7 +51,6 @@ const AnalyticsPage = () => {
     ],
   };
 
-  // Data for Occupancy Per Hotel (Pie Chart)
   const occupancyPerHotelData = {
     labels: occupancyPerHotel?.map(data => data.hotelName) || [],
     datasets: [
@@ -96,7 +93,6 @@ const AnalyticsPage = () => {
             <h2 className="text-2xl font-bold text-gray-800">Total Bookings</h2>
             <p className="text-5xl font-bold text-green-600 mt-4">{totalBookings}</p>
           </div>
-          {/* Placeholder for other key metrics */}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">

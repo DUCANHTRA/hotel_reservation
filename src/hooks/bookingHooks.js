@@ -2,7 +2,7 @@ import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { createBooking, getBookingsByUserId, getAllBookings, updateBookingStatus, cancelBooking } from '../api/bookingApi';
 import { getHotelById } from '../api/hotelApi';
 import { getRoomById } from '../api/roomApi';
-import { getUserData } from '../firebase/firebase'; // Import getUserData
+import { getUserData } from '../firebase/firebase';
 
 export const useCreateBooking = () => {
   const queryClient = useQueryClient();
@@ -10,7 +10,7 @@ export const useCreateBooking = () => {
     mutationFn: createBooking,
     onSuccess: () => {
       queryClient.invalidateQueries(['userBookings']);
-      queryClient.invalidateQueries(['allBookings']); // Invalidate for admin view
+      queryClient.invalidateQueries(['allBookings']);
     },
   });
 };
@@ -51,12 +51,12 @@ export const useAllBookings = () => {
         if (room && room.hotelId) {
           hotel = await getHotelById(room.hotelId);
         }
-        const user = await getUserData(booking.userId); // Fetch user data
+        const user = await getUserData(booking.userId);
         return {
           ...booking,
           hotel,
           room,
-          user, // Include user data
+          user,
         };
       });
       return Promise.all(enrichedBookingsPromises);
@@ -70,7 +70,7 @@ export const useUpdateBookingStatus = () => {
     mutationFn: ({ bookingId, status }) => updateBookingStatus(bookingId, status),
     onSuccess: () => {
       queryClient.invalidateQueries(['allBookings']);
-      queryClient.invalidateQueries(['userBookings']); // Invalidate user view if needed
+      queryClient.invalidateQueries(['userBookings']);
     },
   });
 };

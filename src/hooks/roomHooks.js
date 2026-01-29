@@ -27,9 +27,6 @@ export const useDeleteRoom = () => {
   return useMutation({
     mutationFn: deleteRoom,
     onSuccess: (deletedRoomId, variables) => {
-      // Need to invalidate rooms for the specific hotel.
-      // This requires passing hotelId to the mutation or inferring it.
-      // For now, let's just invalidate all rooms queries. A more granular approach would be better.
       queryClient.invalidateQueries(['rooms']);
     },
   });
@@ -39,6 +36,6 @@ export const useRooms = (hotelId) => {
   return useQuery({
     queryKey: ['rooms', hotelId],
     queryFn: () => getRoomsByHotelId(hotelId),
-    enabled: !!hotelId, // Only run the query if hotelId is provided
+    enabled: !!hotelId,
   });
 };

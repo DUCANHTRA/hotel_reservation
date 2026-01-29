@@ -1,15 +1,14 @@
 import { db } from '../firebase/firebase';
 import { collection, addDoc, query, where, getDocs, Timestamp, updateDoc, doc } from 'firebase/firestore';
-import { getRoomById } from './roomApi'; // Import getRoomById
+import { getRoomById } from './roomApi'; 
 
 export const createBooking = async (bookingDetails) => {
   const { roomId, checkInDate, checkOutDate, userId, totalPrice, numberOfGuests, roomCapacity } = bookingDetails;
 
-  // Convert string dates to Firebase Timestamps
+
   const checkInTimestamp = Timestamp.fromDate(new Date(checkInDate));
   const checkOutTimestamp = Timestamp.fromDate(new Date(checkOutDate));
 
-  // 1. Check for overlapping bookings
   const bookingsRef = collection(db, 'Bookings');
   const q = query(
     bookingsRef,
@@ -23,20 +22,20 @@ export const createBooking = async (bookingDetails) => {
     throw new Error('Room is not available for the selected dates.');
   }
 
-  // 2. Check if number of guests exceeds room capacity
+
   if (numberOfGuests > roomCapacity) {
     throw new Error(`Number of guests (${numberOfGuests}) exceeds room capacity (${roomCapacity}).`);
   }
 
-  // 3. Create the booking
+ 
   const newBooking = {
     userId,
     roomId,
     checkInDate: checkInTimestamp,
     checkOutDate: checkOutTimestamp,
     totalPrice,
-    numberOfGuests, // Store number of guests for reference
-    status: 'confirmed', // Default status
+    numberOfGuests, 
+    status: 'confirmed',
     createdAt: Timestamp.now(),
   };
 
@@ -51,8 +50,8 @@ export const getBookingsByUserId = async (userId) => {
   const bookings = querySnapshot.docs.map(doc => ({
     id: doc.id,
     ...doc.data(),
-    checkInDate: doc.data().checkInDate.toDate().toISOString().split('T')[0], // Convert Timestamp to date string
-    checkOutDate: doc.data().checkOutDate.toDate().toISOString().split('T')[0], // Convert Timestamp to date string
+    checkInDate: doc.data().checkInDate.toDate().toISOString().split('T')[0],
+    checkOutDate: doc.data().checkOutDate.toDate().toISOString().split('T')[0], 
   }));
   return bookings;
 };
@@ -65,7 +64,7 @@ export const getAllBookings = async () => {
     ...doc.data(),
     checkInDate: doc.data().checkInDate.toDate().toISOString().split('T')[0],
     checkOutDate: doc.data().checkOutDate.toDate().toISOString().split('T')[0],
-    createdAt: doc.data().createdAt?.toDate().toISOString(), // Include createdAt for analytics
+    createdAt: doc.data().createdAt?.toDate().toISOString(), 
   }));
   return bookings;
 };

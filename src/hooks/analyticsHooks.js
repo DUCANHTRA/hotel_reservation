@@ -2,14 +2,13 @@ import { useQuery } from '@tanstack/react-query';
 import { getBookingsOverTime, getMostBookedHotels, getAllBookings } from '../api/bookingApi';
 import { getTotalUsers } from '../api/userApi';
 import { getHotels } from '../api/hotelApi';
-import { getRoomsByHotelId, getRoomById } from '../api/roomApi'; // Import getRoomById
+import { getRoomsByHotelId, getRoomById } from '../api/roomApi';
 
 export const useBookingsOverTime = () => {
   return useQuery({
     queryKey: ['bookingsOverTime'],
     queryFn: async () => {
       const bookings = await getBookingsOverTime();
-      // Process bookings to aggregate data by date
       const data = {};
       bookings.forEach(booking => {
         const date = booking.createdAt ? new Date(booking.createdAt).toISOString().split('T')[0] : 'unknown';
@@ -96,7 +95,7 @@ export const useOccupancyPerHotel = () => {
         const hotelBookings = enrichedBookings.filter(booking => 
             booking.hotelId === hotel.id
         );
-        occupancyData[hotel.id].bookedRooms = hotelBookings.length; // Simplified for now, real occupancy needs date range
+        occupancyData[hotel.id].bookedRooms = hotelBookings.length;
       }
 
       return Object.values(occupancyData).map(data => ({

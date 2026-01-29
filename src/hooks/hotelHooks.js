@@ -17,7 +17,7 @@ export const useUpdateHotel = () => {
     mutationFn: updateHotel,
     onSuccess: () => {
       queryClient.invalidateQueries(['hotels']);
-      queryClient.invalidateQueries(['hotel']); // Invalidate specific hotel details if open
+      queryClient.invalidateQueries(['hotel']);
     },
   });
 };
@@ -43,7 +43,7 @@ export const useHotel = (hotelId) => {
   return useQuery({
     queryKey: ['hotel', hotelId],
     queryFn: () => getHotelById(hotelId),
-    enabled: !!hotelId, // Only run the query if hotelId is provided
+    enabled: !!hotelId,
   });
 };
 
@@ -51,6 +51,5 @@ export const useFilteredHotels = (filters) => {
   return useQuery({
     queryKey: ['filteredHotels', filters],
     queryFn: () => getFilteredHotels(filters),
-    // Optionally add staleTime, cacheTime etc.
   });
 };

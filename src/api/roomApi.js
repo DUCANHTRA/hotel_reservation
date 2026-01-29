@@ -33,16 +33,13 @@ export const addRoom = async (roomData) => {
 
 export const updateRoom = async ({ roomId, roomData }) => {
   try {
-    // console.log("Attempting to update room:", roomId, "with data:", roomData);
     if (!roomId) {
       throw new Error("updateRoom requires a roomId.");
     }
     const roomDocRef = doc(db, 'Rooms', roomId);
     await updateDoc(roomDocRef, roomData);
-    // console.log("Room updated successfully:", roomId);
     return { id: roomId, ...roomData };
   } catch (error) {
-    // console.error("Error updating room in API:", error);
     throw error;
   }
 };

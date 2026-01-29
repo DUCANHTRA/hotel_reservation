@@ -7,7 +7,7 @@ import Navbar from '../components/Navbar';
 const RegisterPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState(''); // New state for name
+  const [name, setName] = useState('');
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const { setUser } = useStore();
@@ -15,7 +15,7 @@ const RegisterPage = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const userObject = await registerWithEmailAndPassword(email, password, name); // Pass name
+      const userObject = await registerWithEmailAndPassword(email, password, name);
       setUser(userObject);
       navigate('/dashboard');
     } catch (error) {

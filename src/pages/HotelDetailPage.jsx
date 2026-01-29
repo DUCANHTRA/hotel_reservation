@@ -18,7 +18,7 @@ const HotelDetailPage = () => {
   const [checkOutDate, setCheckOutDate] = useState('');
   const [numberOfGuests, setNumberOfGuests] = useState(1);
   const [minCheckOutDate, setMinCheckOutDate] = useState('');
-  const [bookingMessage, setBookingMessage] = useState({ type: '', text: '' }); // for success/error messages
+  const [bookingMessage, setBookingMessage] = useState({ type: '', text: '' });
 
   const { mutate: createBooking, isLoading: isBookingLoading } = useCreateBooking();
 

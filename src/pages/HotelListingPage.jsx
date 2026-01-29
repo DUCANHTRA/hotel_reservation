@@ -16,7 +16,7 @@ const HotelListingPage = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedFilters(filters);
-    }, 780); // 500ms debounce delay
+    }, 780);
 
     return () => {
       clearTimeout(timer);
@@ -37,7 +37,6 @@ const HotelListingPage = () => {
       <main className="container mx-auto p-4 mt-8">
         <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">Available Hotels</h1>
 
-        {/* Filter Section */}
         <div className="bg-white p-6 rounded-lg shadow-lg mb-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Filter Hotels</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -105,7 +104,6 @@ id="maxPrice"
           </div>
         </div>
 
-        {/* Hotel List */}
         {hotels && hotels.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {hotels.map((hotel) => (

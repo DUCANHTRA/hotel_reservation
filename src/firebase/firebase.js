@@ -36,7 +36,7 @@ export const registerWithEmailAndPassword = async (email, password, name) => {
     uid: user.uid,
     name: name,
     email: user.email,
-    role: 'guest', // Default role
+    role: 'guest',
     createdAt: new Date(),
   });
   const userData = await getUserData(user.uid);

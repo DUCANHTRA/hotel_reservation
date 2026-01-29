@@ -15,7 +15,7 @@ const ManageRoomsPage = () => {
   const { mutate: deleteRoom } = useDeleteRoom();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentRoom, setCurrentRoom] = useState(null); // For editing
+  const [currentRoom, setCurrentRoom] = useState(null);
   const [formData, setFormData] = useState({
     hotelId: selectedHotelId,
     type: '',
@@ -86,15 +86,12 @@ const ManageRoomsPage = () => {
       },
       onError: (error) => {
         alert(`Operation failed: ${error.message}`);
-        // console.error("Mutation failed:", error);
       }
     };
 
     if (currentRoom) {
-      // console.log("Submitting room update:", { roomId: currentRoom.id, roomData });
       updateRoom({ roomId: currentRoom.id, roomData }, mutationOptions);
     } else {
-      // console.log("Submitting new room:", roomData);
       addRoom(roomData, mutationOptions);
     }
   };

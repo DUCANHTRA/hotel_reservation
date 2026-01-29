@@ -17,7 +17,7 @@ const DashboardPage = () => {
   }, [user, navigate]);
 
   if (!user) {
-    return null; // Redirecting in useEffect, so render nothing for a moment
+    return null;
   }
 
   return (
