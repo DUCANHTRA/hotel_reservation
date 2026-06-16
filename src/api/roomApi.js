@@ -1,38 +1,69 @@
-import { db } from '../firebase/firebase';
+import { db, auth } from '../firebase/firebase';
 import { collection, query, where, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 
+const requireAuth = () => {
+  if (!auth || !auth.currentUser) {
+    const err = new Error('User not authenticated. Sign in before performing this operation.');
+    err.code = 'auth/not-authenticated';
+    throw err;
+  }
+};
+
 export const getRoomsByHotelId = async (hotelId) => {
-  const roomsCollectionRef = collection(db, 'Rooms');
-  const q = query(roomsCollectionRef, where('hotelId', '==', hotelId));
-  const querySnapshot = await getDocs(q);
-  const rooms = querySnapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
-  return rooms;
+  try {
+    const roomsCollectionRef = collection(db, 'Rooms');
+    const q = query(roomsCollectionRef, where('hotelId', '==', hotelId));
+    const querySnapshot = await getDocs(q);
+    const rooms = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    return rooms;
+  } catch (error) {
+    console.error('getRoomsByHotelId error:', error);
+    if (error?.code === 'permission-denied' || /Missing or insufficient permissions/.test(error.message)) {
+      return [];
+    }
+    throw error;
+  }
 };
 
 export const getRoomById = async (roomId) => {
-  const roomDocRef = doc(db, 'Rooms', roomId);
-  const roomDoc = await getDoc(roomDocRef);
-  if (roomDoc.exists()) {
-    return { id: roomDoc.id, ...roomDoc.data() };
-  } else {
-    return null;
+  try {
+    const roomDocRef = doc(db, 'Rooms', roomId);
+    const roomDoc = await getDoc(roomDocRef);
+    if (roomDoc.exists()) {
+      return { id: roomDoc.id, ...roomDoc.data() };
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error('getRoomById error:', error);
+    if (error?.code === 'permission-denied' || /Missing or insufficient permissions/.test(error.message)) {
+      return null;
+    }
+    throw error;
   }
 };
 
 export const addRoom = async (roomData) => {
-  const roomsCollectionRef = collection(db, 'Rooms');
-  const docRef = await addDoc(roomsCollectionRef, {
-    ...roomData,
-    createdAt: new Date(),
-  });
-  return { id: docRef.id, ...roomData };
+  try {
+    requireAuth();
+    const roomsCollectionRef = collection(db, 'Rooms');
+    const docRef = await addDoc(roomsCollectionRef, {
+      ...roomData,
+      createdAt: new Date(),
+    });
+    return { id: docRef.id, ...roomData };
+  } catch (error) {
+    console.error('addRoom error:', error);
+    throw error;
+  }
 };
 
 export const updateRoom = async ({ roomId, roomData }) => {
   try {
+    requireAuth();
     if (!roomId) {
       throw new Error("updateRoom requires a roomId.");
     }
@@ -40,12 +71,19 @@ export const updateRoom = async ({ roomId, roomData }) => {
     await updateDoc(roomDocRef, roomData);
     return { id: roomId, ...roomData };
   } catch (error) {
+    console.error('updateRoom error:', error);
     throw error;
   }
 };
 
 export const deleteRoom = async (roomId) => {
-  const roomDocRef = doc(db, 'Rooms', roomId);
-  await deleteDoc(roomDocRef);
-  return roomId;
+  try {
+    requireAuth();
+    const roomDocRef = doc(db, 'Rooms', roomId);
+    await deleteDoc(roomDocRef);
+    return roomId;
+  } catch (error) {
+    console.error('deleteRoom error:', error);
+    throw error;
+  }
 };

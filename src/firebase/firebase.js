@@ -20,12 +20,18 @@ export const db = getFirestore(app);
 
 export const getUserData = async (uid) => {
   if (!uid) return null;
-  const userRef = doc(db, 'Users', uid);
-  const docSnap = await getDoc(userRef);
-  if (docSnap.exists()) {
-    return { uid: docSnap.id, ...docSnap.data() };
+  try {
+    const userRef = doc(db, 'Users', uid);
+    const docSnap = await getDoc(userRef);
+    if (docSnap.exists()) {
+      return { uid: docSnap.id, ...docSnap.data() };
+    }
+    return null;
+  } catch (error) {
+    console.error('getUserData error:', error);
+    // If permission denied or other Firestore error, return null so caller can continue
+    return null;
   }
-  return null;
 };
 
 export const registerWithEmailAndPassword = async (email, password, name) => {
