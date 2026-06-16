@@ -20,11 +20,9 @@ export const getRoomsByHotelId = async (hotelId) => {
     }));
     return rooms;
   } catch (error) {
-    console.error('getRoomsByHotelId error:', error);
-    if (error?.code === 'permission-denied' || /Missing or insufficient permissions/.test(error.message)) {
-      return [];
-    }
-    throw error;
+    // Log a concise message and return safe fallback so UI can render gracefully
+    console.warn('getRoomsByHotelId read failed:', error?.code || error?.message || error);
+    return [];
   }
 };
 
@@ -38,11 +36,8 @@ export const getRoomById = async (roomId) => {
       return null;
     }
   } catch (error) {
-    console.error('getRoomById error:', error);
-    if (error?.code === 'permission-denied' || /Missing or insufficient permissions/.test(error.message)) {
-      return null;
-    }
-    throw error;
+    console.warn('getRoomById read failed:', error?.code || error?.message || error);
+    return null;
   }
 };
 
