@@ -12,29 +12,38 @@ const Navbar = () => {
   };
 
   return (
-    <header className="bg-white shadow p-4">
-      <nav className="container mx-auto flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold text-blue-600">Hotel Booking</Link>
-        <div className="space-x-4">
-          <Link to="/" className="text-gray-600 hover:text-blue-600">Home</Link>
-          <Link to="/hotels" className="text-gray-600 hover:text-blue-600">Hotels</Link>
+    <header className="sticky top-0 z-50 bg-white border-b border-paper-dark">
+      <nav className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+        <Link to="/" className="text-sm font-bold tracking-widest uppercase text-ink">
+          <span className="hidden sm:inline">— </span>
+          Ryokan
+          <span className="hidden sm:inline"> —</span>
+        </Link>
+        <div className="flex items-center gap-8 text-xs uppercase tracking-widest text-ink-300">
+          <Link to="/" className="hover:text-ink transition-colors duration-300">Home</Link>
+          <Link to="/hotels" className="hover:text-ink transition-colors duration-300">Hotels</Link>
           {user && user.role === 'admin' && (
-            <Link to="/admin" className="text-gray-600 hover:text-blue-600">Admin</Link>
+            <Link to="/admin" className="hover:text-ink transition-colors duration-300">Admin</Link>
           )}
           {user ? (
             <>
-              <Link to="/dashboard" className="text-gray-600 hover:text-blue-600">Dashboard</Link>
+              <Link to="/dashboard" className="hover:text-ink transition-colors duration-300">Dashboard</Link>
               <button
                 onClick={handleLogout}
-                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                className="hover:text-ink transition-colors duration-300"
               >
                 Logout
               </button>
             </>
           ) : (
             <>
-              <Link to="/login" className="text-gray-600 hover:text-blue-600">Login</Link>
-              <Link to="/register" className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Register</Link>
+              <Link to="/login" className="hover:text-ink transition-colors duration-300">Login</Link>
+              <Link
+                to="/register"
+                className="border border-ink-200 px-4 py-1.5 hover:border-ink transition-colors duration-300"
+              >
+                Register
+              </Link>
             </>
           )}
         </div>
