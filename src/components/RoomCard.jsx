@@ -1,7 +1,7 @@
 import React from 'react';
 import useStore from '../store/store';
 
-const RoomCard = ({ room, onBook, checkInDate, checkOutDate, numberOfGuests }) => {
+const RoomCard = ({ room, onBook, checkInDate, checkOutDate }) => {
   const { user } = useStore();
   const isBookButtonDisabled = !checkInDate || !checkOutDate || !user;
 

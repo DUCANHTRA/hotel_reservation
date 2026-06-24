@@ -16,7 +16,7 @@ const HotelListingPage = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedFilters(filters);
-    }, 780);
+    }, 400);
 
     return () => {
       clearTimeout(timer);

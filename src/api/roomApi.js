@@ -1,5 +1,5 @@
 import { db, auth } from '../firebase/firebase';
-import { collection, query, where, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 
 const requireAuth = () => {
   if (!auth || !auth.currentUser) {
@@ -47,7 +47,7 @@ export const addRoom = async (roomData) => {
     const roomsCollectionRef = collection(db, 'Rooms');
     const docRef = await addDoc(roomsCollectionRef, {
       ...roomData,
-      createdAt: new Date(),
+      createdAt: serverTimestamp(),
     });
     return { id: docRef.id, ...roomData };
   } catch (error) {

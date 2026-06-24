@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useRooms, useAddRoom, useUpdateRoom, useDeleteRoom } from '../../hooks/roomHooks';
 import { useHotels } from '../../hooks/hotelHooks';
 import Navbar from '../../components/Navbar';
-import { Link } from 'react-router-dom';
 
 const ManageRoomsPage = () => {
   const { data: hotels, isLoading: isLoadingHotels, isError: isErrorHotels, error: errorHotels } = useHotels();

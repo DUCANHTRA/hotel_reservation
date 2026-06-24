@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import useStore from '../store/store';
 import { useHotel } from '../hooks/hotelHooks';
@@ -10,44 +10,46 @@ import Navbar from '../components/Navbar';
 
 const HotelDetailPage = () => {
   const { id } = useParams();
-  const { user, setUser } = useStore();
+  const { user } = useStore();
   const { data: hotel, isLoading: isLoadingHotel, isError: isErrorHotel, error: errorHotel } = useHotel(id);
   const { data: rooms, isLoading: isLoadingRooms, isError: isErrorRooms, error: errorRooms } = useRooms(id);
 
-  const [checkInDate, setCheckInDate] = useState('');
-  const [checkOutDate, setCheckOutDate] = useState('');
-  const [numberOfGuests, setNumberOfGuests] = useState(1);
-  const [minCheckOutDate, setMinCheckOutDate] = useState('');
-  const [bookingMessage, setBookingMessage] = useState({ type: '', text: '' });
-
-  const { mutate: createBooking, isLoading: isBookingLoading } = useCreateBooking();
-
-
-  useEffect(() => {
+  const getDateStrings = () => {
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
+    return {
+      todayString: today.toISOString().split('T')[0],
+      tomorrowString: tomorrow.toISOString().split('T')[0],
+    };
+  };
 
-    const todayString = today.toISOString().split('T')[0];
-    const tomorrowString = tomorrow.toISOString().split('T')[0];
+  const [checkInDate, setCheckInDate] = useState(() => getDateStrings().todayString);
+  const [checkOutDate, setCheckOutDate] = useState(() => getDateStrings().tomorrowString);
+  const [numberOfGuests, setNumberOfGuests] = useState(1);
+  const [bookingMessage, setBookingMessage] = useState({ type: '', text: '' });
 
-    setCheckInDate(todayString);
-    setCheckOutDate(tomorrowString);
-    setMinCheckOutDate(tomorrowString);
-  }, []);
+  const { mutate: createBooking } = useCreateBooking();
 
-  useEffect(() => {
+  const minCheckOutDate = useMemo(() => {
     if (checkInDate) {
       const checkIn = new Date(checkInDate);
       const nextDay = new Date(checkIn);
       nextDay.setDate(nextDay.getDate() + 1);
-      const nextDayString = nextDay.toISOString().split('T')[0];
-      setMinCheckOutDate(nextDayString);
-      if (new Date(checkOutDate) < nextDay) {
-        setCheckOutDate(nextDayString);
-      }
+      return nextDay.toISOString().split('T')[0];
     }
-  }, [checkInDate, checkOutDate]);
+    return '';
+  }, [checkInDate]);
+
+  const handleCheckInChange = (e) => {
+    const newCheckIn = e.target.value;
+    setCheckInDate(newCheckIn);
+    if (checkOutDate && new Date(checkOutDate) <= new Date(newCheckIn)) {
+      const nextDay = new Date(newCheckIn);
+      nextDay.setDate(nextDay.getDate() + 1);
+      setCheckOutDate(nextDay.toISOString().split('T')[0]);
+    }
+  };
 
 
   const handleBookRoom = (roomId, pricePerNight, roomCapacity) => {
@@ -120,7 +122,7 @@ const HotelDetailPage = () => {
             <DatePicker
               label="Check-in Date"
               selectedDate={checkInDate}
-              onChange={(e) => setCheckInDate(e.target.value)}
+              onChange={handleCheckInChange}
               minDate={new Date().toISOString().split('T')[0]}
             />
             <DatePicker

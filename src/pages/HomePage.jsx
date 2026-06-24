@@ -2,13 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { useHotels } from '../hooks/hotelHooks';
+import { useFeaturedHotels } from '../hooks/hotelHooks';
 import HotelCard from '../components/HotelCard';
 
 const HomePage = () => {
-  const { data: hotels, isLoading, isError } = useHotels();
-
-  const featuredHotels = hotels?.slice(0, 3);
+  const { data: featuredHotels, isLoading, isError } = useFeaturedHotels();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -30,6 +28,9 @@ const HomePage = () => {
         {isLoading && <p className="text-center">Loading hotels...</p>}
         {isError && <p className="text-center text-red-500">Error fetching hotels.</p>}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {!isLoading && !isError && (!featuredHotels || featuredHotels.length === 0) && (
+            <p className="text-center text-gray-500 col-span-full">No featured hotels available at the moment.</p>
+          )}
           {featuredHotels?.map(hotel => (
             <HotelCard key={hotel.id} hotel={hotel} />
           ))}

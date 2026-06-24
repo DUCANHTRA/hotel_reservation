@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useAllBookings, useUpdateBookingStatus } from '../../hooks/bookingHooks';
 import Navbar from '../../components/Navbar';
-import { Link } from 'react-router-dom';
 
 const ManageBookingsPage = () => {
   const { data: bookings, isLoading, isError, error } = useAllBookings();

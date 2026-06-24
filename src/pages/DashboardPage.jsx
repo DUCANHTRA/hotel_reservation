@@ -6,7 +6,7 @@ import BookingCard from '../components/BookingCard';
 import Navbar from '../components/Navbar';
 
 const DashboardPage = () => {
-  const { user, setUser } = useStore();
+  const { user } = useStore();
   const navigate = useNavigate();
   const { data: bookings, isLoading, isError, error } = useUserBookings(user?.uid);
 

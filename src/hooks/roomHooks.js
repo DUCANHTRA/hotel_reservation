@@ -26,7 +26,7 @@ export const useDeleteRoom = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteRoom,
-    onSuccess: (deletedRoomId, variables) => {
+    onSuccess: () => {
       queryClient.invalidateQueries(['rooms']);
     },
   });

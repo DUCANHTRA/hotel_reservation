@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useHotels, useAddHotel, useUpdateHotel, useDeleteHotel } from '../../hooks/hotelHooks';
 import Navbar from '../../components/Navbar';
-import { Link } from 'react-router-dom';
 
 const ManageHotelsPage = () => {
   const { data: hotels, isLoading, isError, error } = useHotels();

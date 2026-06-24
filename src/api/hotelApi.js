@@ -1,5 +1,9 @@
 import { db, auth } from '../firebase/firebase';
-import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, query, where } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, query, where, limit, serverTimestamp } from 'firebase/firestore';
+
+const isPermissionError = (error) => {
+  return error?.code === 'permission-denied' || /Missing or insufficient permissions/.test(error?.message);
+};
 
 const requireAuth = () => {
   if (!auth || !auth.currentUser) {
@@ -20,10 +24,25 @@ export const getHotels = async () => {
     return hotels;
   } catch (error) {
     console.error('getHotels error:', error);
-    // If Firestore denies permission, return empty list so UI can show a friendly state
-    if (error?.code === 'permission-denied' || /Missing or insufficient permissions/.test(error.message)) {
+    if (isPermissionError(error)) {
       return [];
     }
+    throw error;
+  }
+};
+
+export const getFeaturedHotels = async () => {
+  try {
+    const hotelsCollectionRef = collection(db, 'Hotels');
+    const q = query(hotelsCollectionRef, limit(3));
+    const querySnapshot = await getDocs(q);
+    const hotels = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    return hotels;
+  } catch (error) {
+    console.error('getFeaturedHotels error:', error);
     throw error;
   }
 };
@@ -39,8 +58,8 @@ export const getHotelById = async (hotelId) => {
     }
   } catch (error) {
     console.error('getHotelById error:', error);
-    if (error?.code === 'permission-denied' || /Missing or insufficient permissions/.test(error.message)) {
-      return null;
+    if (isPermissionError(error)) {
+      throw new Error('You do not have permission to view this hotel.');
     }
     throw error;
   }
@@ -52,7 +71,7 @@ export const addHotel = async (hotelData) => {
     const hotelsCollectionRef = collection(db, 'Hotels');
     const docRef = await addDoc(hotelsCollectionRef, {
       ...hotelData,
-      createdAt: new Date(),
+      createdAt: serverTimestamp(),
     });
     return { id: docRef.id, ...hotelData };
   } catch (error) {
@@ -109,6 +128,8 @@ export const getFilteredHotels = async (filters) => {
       q = query(q, where('rating', '>=', parseFloat(minRating)));
     }
 
+    q = query(q, limit(100));
+
     const querySnapshot = await getDocs(q);
     let hotels = querySnapshot.docs.map(doc => ({
       id: doc.id,
@@ -122,7 +143,7 @@ export const getFilteredHotels = async (filters) => {
     return hotels;
   } catch (error) {
     console.error('getFilteredHotels error:', error);
-    if (error?.code === 'permission-denied' || /Missing or insufficient permissions/.test(error.message)) {
+    if (isPermissionError(error)) {
       return [];
     }
     throw error;
