@@ -2,5 +2,15 @@
   "$schema": "https://opencode.ai/config.json",
   "skills": {
     "paths": [".opencode/skills"]
+  },
+  "references": {
+    "firebase": {
+      "repository": "firebase/firebase-js-sdk",
+      "description": "Firebase JS SDK — use for Firestore and Auth API details"
+    },
+    "react-router": {
+      "repository": "remix-run/react-router",
+      "description": "React Router v7 — use for route patterns and API"
+    }
   }
 }
