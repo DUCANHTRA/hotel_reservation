@@ -78,7 +78,7 @@ const ManageRoomsPage = () => {
       capacity,
       pricePerNight,
     };
-    
+
     const mutationOptions = {
       onSuccess: () => {
         closeModal();
@@ -101,25 +101,41 @@ const ManageRoomsPage = () => {
     }
   };
 
-  if (isLoadingHotels || isLoadingRooms) return <div className="text-center mt-8 text-xl">Loading...</div>;
-  if (isErrorHotels) return <div className="text-center mt-8 text-red-500 text-xl">Error loading hotels: {errorHotels.message}</div>;
-  if (isErrorRooms) return <div className="text-center mt-8 text-red-500 text-xl">Error loading rooms: {errorRooms.message}</div>;
+  if (isLoadingHotels || isLoadingRooms) return (
+    <div className="min-h-screen bg-white">
+      <Navbar />
+      <p className="text-xs tracking-widest uppercase text-ink-300 text-center py-20">Loading...</p>
+    </div>
+  );
+  if (isErrorHotels) return (
+    <div className="min-h-screen bg-white">
+      <Navbar />
+      <p className="text-xs tracking-widest uppercase text-ink-300 text-center py-20">Error: {errorHotels.message}</p>
+    </div>
+  );
+  if (isErrorRooms) return (
+    <div className="min-h-screen bg-white">
+      <Navbar />
+      <p className="text-xs tracking-widest uppercase text-ink-300 text-center py-20">Error: {errorRooms.message}</p>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-white">
       <Navbar />
-      <main className="container mx-auto p-4 mt-8">
-        <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">Manage Rooms</h1>
+      <main className="max-w-7xl mx-auto px-6 pt-16 pb-24">
+        <h1 className="text-2xl md:text-3xl font-light tracking-wider text-ink">Manage Rooms</h1>
+        <div className="w-12 h-px bg-ink-200 mt-4 mb-6" />
 
-        <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
-          <label htmlFor="hotel-select" className="block text-gray-700 text-sm font-bold mb-2">
-            Select Hotel to Manage Rooms:
+        <div className="bg-paper p-6 mb-6">
+          <label htmlFor="hotel-select" className="block text-xs tracking-wider uppercase text-ink-300 mb-2">
+            Select Hotel
           </label>
           <select
             id="hotel-select"
             value={selectedHotelId}
             onChange={(e) => setSelectedHotelId(e.target.value)}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full py-2 px-0 border-b border-ink-100 bg-transparent text-ink text-sm focus:outline-none focus:border-ink-300 transition-colors duration-300"
           >
             <option value="">-- Select a Hotel --</option>
             {hotels.map((hotel) => (
@@ -132,55 +148,41 @@ const ManageRoomsPage = () => {
 
         {selectedHotelId && (
           <>
-            <div className="flex justify-end mb-4">
+            <div className="flex justify-end mb-6">
               <button
                 onClick={openAddModal}
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                className="text-xs tracking-widest uppercase border border-ink-200 px-5 py-2 text-ink-300 hover:border-ink hover:text-ink transition-colors duration-300"
               >
                 Add New Room
               </button>
             </div>
 
-            <div className="bg-white p-8 rounded-lg shadow-lg">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Type
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Capacity
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Price/Night
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Amenities
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
-                    </th>
+            <div className="bg-paper overflow-x-auto">
+              <table className="min-w-full">
+                <thead>
+                  <tr className="border-b border-paper-dark">
+                    <th className="px-6 py-4 text-left text-xs tracking-wider uppercase text-ink-300 font-medium">Type</th>
+                    <th className="px-6 py-4 text-left text-xs tracking-wider uppercase text-ink-300 font-medium">Capacity</th>
+                    <th className="px-6 py-4 text-left text-xs tracking-wider uppercase text-ink-300 font-medium">Price/Night</th>
+                    <th className="px-6 py-4 text-left text-xs tracking-wider uppercase text-ink-300 font-medium">Amenities</th>
+                    <th className="px-6 py-4 text-left text-xs tracking-wider uppercase text-ink-300 font-medium">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody>
                   {rooms.length > 0 ? (
                     rooms.map((room) => (
-                      <tr key={room.id}>
-                        <td className="px-6 py-4 whitespace-nowrap">{room.type}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">{room.capacity}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">${room.pricePerNight}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">{room.amenities.join(', ')}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          <button
-                            onClick={() => openEditModal(room)}
-                            className="text-indigo-600 hover:text-indigo-900 mr-4"
-                          >
+                      <tr key={room.id} className="border-b border-paper-dark">
+                        <td className="px-6 py-4 text-sm text-ink">{room.type}</td>
+                        <td className="px-6 py-4 text-sm text-ink-300">{room.capacity}</td>
+                        <td className="px-6 py-4 text-sm text-ink-300">${room.pricePerNight}</td>
+                        <td className="px-6 py-4 text-sm text-ink-300">{room.amenities.join(', ')}</td>
+                        <td className="px-6 py-4 text-sm">
+                          <button onClick={() => openEditModal(room)}
+                            className="text-xs tracking-widest uppercase text-ink-300 hover:text-ink transition-colors duration-300 mr-4">
                             Edit
                           </button>
-                          <button
-                            onClick={() => handleDelete(room.id)}
-                            className="text-red-600 hover:text-red-900"
-                          >
+                          <button onClick={() => handleDelete(room.id)}
+                            className="text-xs tracking-widest uppercase text-ink-300 hover:text-ink transition-colors duration-300">
                             Delete
                           </button>
                         </td>
@@ -188,9 +190,7 @@ const ManageRoomsPage = () => {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="5" className="px-6 py-4 whitespace-nowrap text-center text-gray-500">
-                        No rooms found for this hotel.
-                      </td>
+                      <td colSpan="5" className="px-6 py-8 text-xs tracking-widest uppercase text-ink-300 text-center">No rooms found for this hotel.</td>
                     </tr>
                   )}
                 </tbody>
@@ -200,83 +200,40 @@ const ManageRoomsPage = () => {
         )}
 
         {isModalOpen && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
-            <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">
+          <div className="fixed inset-0 bg-ink/40 overflow-y-auto flex items-center justify-center">
+            <div className="bg-white p-8 w-full max-w-lg mx-4">
+              <h2 className="text-sm font-bold tracking-wider uppercase text-ink mb-6">
                 {currentRoom ? 'Edit Room' : 'Add New Room'}
               </h2>
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="type">
-                    Room Type
-                  </label>
-                  <input
-                    type="text"
-                    id="type"
-                    name="type"
-                    value={formData.type}
-                    onChange={handleChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:focus:ring-blue-500"
-                    required
-                  />
+                  <label className="block text-xs tracking-wider uppercase text-ink-300 mb-2" htmlFor="type">Room Type</label>
+                  <input type="text" id="type" name="type" value={formData.type} onChange={handleChange}
+                    className="w-full py-2 px-0 border-b border-ink-100 bg-transparent text-ink text-sm focus:outline-none focus:border-ink-300 transition-colors duration-300" required />
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="capacity">
-                    Capacity
-                  </label>
-                  <input
-                    type="number"
-                    id="capacity"
-                    name="capacity"
-                    value={formData.capacity}
-                    onChange={handleChange}
-                    min="1"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:focus:ring-blue-500"
-                    required
-                  />
+                  <label className="block text-xs tracking-wider uppercase text-ink-300 mb-2" htmlFor="capacity">Capacity</label>
+                  <input type="number" id="capacity" name="capacity" value={formData.capacity} onChange={handleChange} min="1"
+                    className="w-full py-2 px-0 border-b border-ink-100 bg-transparent text-ink text-sm focus:outline-none focus:border-ink-300 transition-colors duration-300" required />
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pricePerNight">
-                    Price per Night
-                  </label>
-                  <input
-                    type="number"
-                    id="pricePerNight"
-                    name="pricePerNight"
-                    value={formData.pricePerNight}
-                    onChange={handleChange}
-                    min="0"
-                    step="0.01"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:focus:ring-blue-500"
-                    required
-                  />
+                  <label className="block text-xs tracking-wider uppercase text-ink-300 mb-2" htmlFor="pricePerNight">Price per Night</label>
+                  <input type="number" id="pricePerNight" name="pricePerNight" value={formData.pricePerNight} onChange={handleChange} min="0" step="0.01"
+                    className="w-full py-2 px-0 border-b border-ink-100 bg-transparent text-ink text-sm focus:outline-none focus:border-ink-300 transition-colors duration-300" required />
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="amenities">
-                    Amenities (comma-separated)
-                  </label>
-                  <textarea
-                    id="amenities"
-                    name="amenities"
-                    value={formData.amenities.join(', ')}
-                    onChange={handleAmenitiesChange}
-                    rows="2"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:focus:ring-blue-500"
-                  ></textarea>
+                  <label className="block text-xs tracking-wider uppercase text-ink-300 mb-2" htmlFor="amenities">Amenities (comma-separated)</label>
+                  <textarea id="amenities" name="amenities" value={formData.amenities.join(', ')} onChange={handleAmenitiesChange} rows="2"
+                    className="w-full py-2 px-0 border-b border-ink-100 bg-transparent text-ink text-sm focus:outline-none focus:border-ink-300 transition-colors duration-300" />
                 </div>
-                <div className="flex justify-end space-x-4">
-                  <button
-                    type="button"
-                    onClick={closeModal}
-                    className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
-                  >
+                <div className="flex justify-end gap-4 pt-2">
+                  <button type="button" onClick={closeModal}
+                    className="text-xs tracking-widest uppercase px-4 py-2 text-ink-300 hover:text-ink transition-colors duration-300">
                     Cancel
                   </button>
-                  <button
-                    type="submit"
-                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                  >
-                    {currentRoom ? 'Update Room' : 'Add Room'}
+                  <button type="submit"
+                    className="text-xs tracking-widest uppercase border border-ink-200 px-5 py-2 text-ink-300 hover:border-ink hover:text-ink transition-colors duration-300">
+                    {currentRoom ? 'Update' : 'Add'}
                   </button>
                 </div>
               </form>

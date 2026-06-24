@@ -21,27 +21,30 @@ const DashboardPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-white">
       <Navbar />
-      <main className="container mx-auto p-4 mt-8">
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">User Dashboard</h2>
-        <div className="bg-white p-8 rounded-lg shadow-lg">
-          <p className="text-xl text-gray-700 mb-6">Welcome, {user.email}</p>
-
-          <h3 className="text-2xl font-bold text-gray-800 mb-4">My Bookings</h3>
-          {isLoading && <div className="text-center mt-4">Loading bookings...</div>}
-          {isError && <div className="text-red-500 text-center mt-4">Error loading bookings: {error.message}</div>}
-
-          {bookings && bookings.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {bookings.map((booking) => (
-                <BookingCard key={booking.id} booking={booking} />
-              ))}
-            </div>
-          ) : (
-            <p className="text-gray-600 text-center">You have no active bookings.</p>
-          )}
+      <main className="max-w-7xl mx-auto px-6 pt-16 pb-24">
+        <div className="mb-12">
+          <p className="text-xs tracking-[0.25em] uppercase text-ink-300">Dashboard</p>
+          <h2 className="text-2xl md:text-3xl font-light tracking-wider text-ink mt-3">
+            Welcome back
+          </h2>
+          <div className="w-12 h-px bg-ink-200 mt-6" />
         </div>
+
+        <h3 className="text-sm font-bold tracking-wider uppercase text-ink mb-6">My Bookings</h3>
+        {isLoading && <p className="text-xs tracking-widest uppercase text-ink-300 text-center py-12">Loading...</p>}
+        {isError && <p className="text-xs tracking-widest uppercase text-ink-300 text-center py-12">Error: {error.message}</p>}
+
+        {bookings && bookings.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {bookings.map((booking) => (
+              <BookingCard key={booking.id} booking={booking} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-xs tracking-widest uppercase text-ink-300 text-center py-12">No bookings yet.</p>
+        )}
       </main>
     </div>
   );

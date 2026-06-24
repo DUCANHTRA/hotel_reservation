@@ -62,7 +62,7 @@ const ManageHotelsPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     const rating = parseFloat(formData.rating);
     const pricePerNight = parseFloat(formData.pricePerNight);
 
@@ -99,61 +99,62 @@ const ManageHotelsPage = () => {
     }
   };
 
-  if (isLoading) return <div className="text-center mt-8 text-xl">Loading hotels...</div>;
-  if (isError) return <div className="text-center mt-8 text-red-500 text-xl">Error: {error.message}</div>;
+  if (isLoading) return (
+    <div className="min-h-screen bg-white">
+      <Navbar />
+      <p className="text-xs tracking-widest uppercase text-ink-300 text-center py-20">Loading...</p>
+    </div>
+  );
+  if (isError) return (
+    <div className="min-h-screen bg-white">
+      <Navbar />
+      <p className="text-xs tracking-widest uppercase text-ink-300 text-center py-20">Error: {error.message}</p>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-white">
       <Navbar />
-      <main className="container mx-auto p-4 mt-8">
-        <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">Manage Hotels</h1>
-        <div className="flex justify-end mb-4">
+      <main className="max-w-7xl mx-auto px-6 pt-16 pb-24">
+        <h1 className="text-2xl md:text-3xl font-light tracking-wider text-ink">Manage Hotels</h1>
+        <div className="w-12 h-px bg-ink-200 mt-4 mb-6" />
+        <div className="flex justify-end mb-6">
           <button
             onClick={openAddModal}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            className="text-xs tracking-widest uppercase border border-ink-200 px-5 py-2 text-ink-300 hover:border-ink hover:text-ink transition-colors duration-300"
           >
             Add New Hotel
           </button>
         </div>
 
-        <div className="bg-white p-8 rounded-lg shadow-lg">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Location
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Rating
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Price/Night
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
+        <div className="bg-paper overflow-x-auto">
+          <table className="min-w-full">
+            <thead>
+              <tr className="border-b border-paper-dark">
+                <th className="px-6 py-4 text-left text-xs tracking-wider uppercase text-ink-300 font-medium">Name</th>
+                <th className="px-6 py-4 text-left text-xs tracking-wider uppercase text-ink-300 font-medium">Location</th>
+                <th className="px-6 py-4 text-left text-xs tracking-wider uppercase text-ink-300 font-medium">Rating</th>
+                <th className="px-6 py-4 text-left text-xs tracking-wider uppercase text-ink-300 font-medium">Price/Night</th>
+                <th className="px-6 py-4 text-left text-xs tracking-wider uppercase text-ink-300 font-medium">Actions</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody>
               {hotels.map((hotel) => (
-                <tr key={hotel.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">{hotel.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{hotel.location}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{hotel.rating}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">${hotel.pricePerNight}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <tr key={hotel.id} className="border-b border-paper-dark">
+                  <td className="px-6 py-4 text-sm text-ink">{hotel.name}</td>
+                  <td className="px-6 py-4 text-sm text-ink-300">{hotel.location}</td>
+                  <td className="px-6 py-4 text-sm text-ink-300">{hotel.rating}</td>
+                  <td className="px-6 py-4 text-sm text-ink-300">${hotel.pricePerNight}</td>
+                  <td className="px-6 py-4 text-sm">
                     <button
                       onClick={() => openEditModal(hotel)}
-                      className="text-indigo-600 hover:text-indigo-900 mr-4"
+                      className="text-xs tracking-widest uppercase text-ink-300 hover:text-ink transition-colors duration-300 mr-4"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDelete(hotel.id)}
-                      className="text-red-600 hover:text-red-900"
+                      className="text-xs tracking-widest uppercase text-ink-300 hover:text-ink transition-colors duration-300"
                     >
                       Delete
                     </button>
@@ -165,113 +166,50 @@ const ManageHotelsPage = () => {
         </div>
 
         {isModalOpen && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
-            <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">
+          <div className="fixed inset-0 bg-ink/40 overflow-y-auto flex items-center justify-center">
+            <div className="bg-white p-8 w-full max-w-lg mx-4">
+              <h2 className="text-sm font-bold tracking-wider uppercase text-ink mb-6">
                 {currentHotel ? 'Edit Hotel' : 'Add New Hotel'}
               </h2>
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
+                  <label className="block text-xs tracking-wider uppercase text-ink-300 mb-2" htmlFor="name">Name</label>
+                  <input type="text" id="name" name="name" value={formData.name} onChange={handleChange}
+                    className="w-full py-2 px-0 border-b border-ink-100 bg-transparent text-ink text-sm focus:outline-none focus:border-ink-300 transition-colors duration-300" required />
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="location">
-                    Location
-                  </label>
-                  <input
-                    type="text"
-                    id="location"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
+                  <label className="block text-xs tracking-wider uppercase text-ink-300 mb-2" htmlFor="location">Location</label>
+                  <input type="text" id="location" name="location" value={formData.location} onChange={handleChange}
+                    className="w-full py-2 px-0 border-b border-ink-100 bg-transparent text-ink text-sm focus:outline-none focus:border-ink-300 transition-colors duration-300" required />
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
-                    Description
-                  </label>
-                  <textarea
-                    id="description"
-                    name="description"
-                    value={formData.description}
-                    onChange={handleChange}
-                    rows="3"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  ></textarea>
+                  <label className="block text-xs tracking-wider uppercase text-ink-300 mb-2" htmlFor="description">Description</label>
+                  <textarea id="description" name="description" value={formData.description} onChange={handleChange} rows="3"
+                    className="w-full py-2 px-0 border-b border-ink-100 bg-transparent text-ink text-sm focus:outline-none focus:border-ink-300 transition-colors duration-300" required />
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="rating">
-                    Rating (1-5)
-                  </label>
-                  <input
-                    type="number"
-                    id="rating"
-                    name="rating"
-                    value={formData.rating}
-                    onChange={handleChange}
-                    min="1"
-                    max="5"
-                    step="0.1"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
+                  <label className="block text-xs tracking-wider uppercase text-ink-300 mb-2" htmlFor="rating">Rating (1-5)</label>
+                  <input type="number" id="rating" name="rating" value={formData.rating} onChange={handleChange} min="1" max="5" step="0.1"
+                    className="w-full py-2 px-0 border-b border-ink-100 bg-transparent text-ink text-sm focus:outline-none focus:border-ink-300 transition-colors duration-300" required />
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pricePerNight">
-                    Price per Night (default)
-                  </label>
-                  <input
-                    type="number"
-                    id="pricePerNight"
-                    name="pricePerNight"
-                    value={formData.pricePerNight}
-                    onChange={handleChange}
-                    min="0"
-                    step="0.01"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
+                  <label className="block text-xs tracking-wider uppercase text-ink-300 mb-2" htmlFor="pricePerNight">Price per Night (default)</label>
+                  <input type="number" id="pricePerNight" name="pricePerNight" value={formData.pricePerNight} onChange={handleChange} min="0" step="0.01"
+                    className="w-full py-2 px-0 border-b border-ink-100 bg-transparent text-ink text-sm focus:outline-none focus:border-ink-300 transition-colors duration-300" required />
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="images">
-                    Image URLs (comma-separated)
-                  </label>
-                  <textarea
-                    id="images"
-                    name="images"
-                    value={formData.images.join(', ')}
-                    onChange={handleImageChange}
-                    rows="2"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  ></textarea>
+                  <label className="block text-xs tracking-wider uppercase text-ink-300 mb-2" htmlFor="images">Image URLs (comma-separated)</label>
+                  <textarea id="images" name="images" value={formData.images.join(', ')} onChange={handleImageChange} rows="2"
+                    className="w-full py-2 px-0 border-b border-ink-100 bg-transparent text-ink text-sm focus:outline-none focus:border-ink-300 transition-colors duration-300" />
                 </div>
-                <div className="flex justify-end space-x-4">
-                  <button
-                    type="button"
-                    onClick={closeModal}
-                    className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
-                  >
+                <div className="flex justify-end gap-4 pt-2">
+                  <button type="button" onClick={closeModal}
+                    className="text-xs tracking-widest uppercase px-4 py-2 text-ink-300 hover:text-ink transition-colors duration-300">
                     Cancel
                   </button>
-                  <button
-                    type="submit"
-                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                  >
-                    {currentHotel ? 'Update Hotel' : 'Add Hotel'}
+                  <button type="submit"
+                    className="text-xs tracking-widest uppercase border border-ink-200 px-5 py-2 text-ink-300 hover:border-ink hover:text-ink transition-colors duration-300">
+                    {currentHotel ? 'Update' : 'Add'}
                   </button>
                 </div>
               </form>

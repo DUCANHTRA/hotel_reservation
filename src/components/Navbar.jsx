@@ -15,9 +15,7 @@ const Navbar = () => {
     <header className="sticky top-0 z-50 bg-white border-b border-paper-dark">
       <nav className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
         <Link to="/" className="text-sm font-bold tracking-widest uppercase text-ink">
-          <span className="hidden sm:inline">— </span>
           Ryokan
-          <span className="hidden sm:inline"> —</span>
         </Link>
         <div className="flex items-center gap-8 text-xs uppercase tracking-widest text-ink-300">
           <Link to="/" className="hover:text-ink transition-colors duration-300">Home</Link>

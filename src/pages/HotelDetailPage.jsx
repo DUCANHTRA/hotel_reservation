@@ -51,7 +51,6 @@ const HotelDetailPage = () => {
     }
   };
 
-
   const handleBookRoom = (roomId, pricePerNight, roomCapacity) => {
     if (!user) {
       setBookingMessage({ type: 'error', text: 'You must be logged in to book a room.' });
@@ -89,89 +88,108 @@ const HotelDetailPage = () => {
     });
   };
 
-  if (isLoadingHotel || isLoadingRooms) return <div className="text-center mt-8 text-xl">Loading details...</div>;
-  if (isErrorHotel) return <div className="text-center mt-8 text-red-500 text-xl">Error: {errorHotel.message}</div>;
-  if (!hotel) return <div className="text-center mt-8 text-xl">Hotel not found.</div>;
+  if (isLoadingHotel || isLoadingRooms) return (
+    <div className="min-h-screen bg-white">
+      <Navbar />
+      <p className="text-xs tracking-widest uppercase text-ink-300 text-center py-20">Loading...</p>
+    </div>
+  );
+  if (isErrorHotel) return (
+    <div className="min-h-screen bg-white">
+      <Navbar />
+      <p className="text-xs tracking-widest uppercase text-ink-300 text-center py-20">Error: {errorHotel.message}</p>
+    </div>
+  );
+  if (!hotel) return (
+    <div className="min-h-screen bg-white">
+      <Navbar />
+      <p className="text-xs tracking-widest uppercase text-ink-300 text-center py-20">Hotel not found.</p>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-white">
       <Navbar />
-      <main className="container mx-auto p-4 mt-8">
-        <div className="bg-white p-8 rounded-lg shadow-lg">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">{hotel.name}</h1>
-          <p className="text-gray-600 text-lg mb-2">{hotel.location}</p>
-          <div className="flex items-center mb-4">
-            <span className="text-yellow-500 text-2xl mr-1">★</span>
-            <span className="text-gray-700 text-xl">{hotel.rating}</span>
+      <main className="max-w-7xl mx-auto px-6 pt-16 pb-24">
+        <div className="bg-paper p-8 md:p-12">
+          <p className="text-xs tracking-[0.25em] uppercase text-ink-300">{hotel.location}</p>
+          <h1 className="text-2xl md:text-3xl font-light tracking-wider text-ink mt-2">{hotel.name}</h1>
+          <div className="flex items-center mt-3">
+            <span className="text-xs text-ink-300 tracking-wider">{hotel.rating}</span>
+            <span className="mx-2 text-ink-200">·</span>
           </div>
-          <p className="text-gray-800 mb-6">{hotel.description}</p>
+          <p className="text-sm text-ink-300 mt-4 leading-relaxed max-w-readable">{hotel.description}</p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-            {hotel.images && hotel.images.map((image, index) => (
-              <img
-                key={index}
-                src={image}
-                alt={`${hotel.name} - ${index + 1}`}
-                className="w-full h-48 object-cover rounded-md shadow"
-              />
-            ))}
-          </div>
+          {hotel.images && hotel.images.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+              {hotel.images.map((image, index) => (
+                <img
+                  key={index}
+                  src={image}
+                  alt={`${hotel.name} - ${index + 1}`}
+                  className="w-full h-48 object-cover"
+                />
+              ))}
+            </div>
+          )}
 
-          <h2 className="text-3xl font-bold text-gray-800 mb-4">Select Dates and Guests</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <DatePicker
-              label="Check-in Date"
-              selectedDate={checkInDate}
-              onChange={handleCheckInChange}
-              minDate={new Date().toISOString().split('T')[0]}
-            />
-            <DatePicker
-              label="Check-out Date"
-              selectedDate={checkOutDate}
-              onChange={(e) => setCheckOutDate(e.target.value)}
-              minDate={minCheckOutDate}
-            />
-            <div>
-              <label htmlFor="guests" className="block text-gray-700 text-sm font-bold mb-2">
-                Number of Guests
-              </label>
-              <input
-                type="number"
-                id="guests"
-                value={numberOfGuests}
-                onChange={(e) => setNumberOfGuests(Math.max(1, parseInt(e.target.value)))}
-                min="1"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+          <div className="mt-12">
+            <h2 className="text-sm font-bold tracking-wider uppercase text-ink">Book Your Stay</h2>
+            <div className="w-8 h-px bg-ink-200 mt-3 mb-6" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <DatePicker
+                label="Check-in"
+                selectedDate={checkInDate}
+                onChange={handleCheckInChange}
+                minDate={new Date().toISOString().split('T')[0]}
               />
+              <DatePicker
+                label="Check-out"
+                selectedDate={checkOutDate}
+                onChange={(e) => setCheckOutDate(e.target.value)}
+                minDate={minCheckOutDate}
+              />
+              <div>
+                <label htmlFor="guests" className="block text-xs tracking-wider uppercase text-ink-300 mb-2">
+                  Guests
+                </label>
+                <input
+                  type="number"
+                  id="guests"
+                  value={numberOfGuests}
+                  onChange={(e) => setNumberOfGuests(Math.max(1, parseInt(e.target.value)))}
+                  min="1"
+                  className="w-full py-2 px-0 border-b border-ink-100 bg-transparent text-ink text-sm focus:outline-none focus:border-ink-300 transition-colors duration-300"
+                />
+              </div>
             </div>
           </div>
 
           {bookingMessage.text && (
-            <div className={`p-3 rounded-md mb-4 ${
-              bookingMessage.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-            }`}>
-              {bookingMessage.text}
-            </div>
+            <p className="text-xs text-ink-300 mt-6">{bookingMessage.text}</p>
           )}
 
-          <h2 className="text-3xl font-bold text-gray-800 mb-4">Available Rooms</h2>
-          {isErrorRooms && <div className="text-red-500">Error loading rooms: {errorRooms.message}</div>}
-          {rooms && rooms.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {rooms.map((room) => (
-                <RoomCard
-                  key={room.id}
-                  room={room}
-                  onBook={handleBookRoom}
-                  checkInDate={checkInDate}
-                  checkOutDate={checkOutDate}
-                  numberOfGuests={numberOfGuests}
-                />
-              ))}
-            </div>
-          ) : (
-            <p className="text-gray-600">No rooms available for this hotel for the selected dates/guests.</p>
-          )}
+          <div className="mt-12">
+            <h2 className="text-sm font-bold tracking-wider uppercase text-ink">Available Rooms</h2>
+            <div className="w-8 h-px bg-ink-200 mt-3 mb-6" />
+            {isErrorRooms && <p className="text-xs text-ink-300">Error loading rooms: {errorRooms.message}</p>}
+            {rooms && rooms.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {rooms.map((room) => (
+                  <RoomCard
+                    key={room.id}
+                    room={room}
+                    onBook={handleBookRoom}
+                    checkInDate={checkInDate}
+                    checkOutDate={checkOutDate}
+                    numberOfGuests={numberOfGuests}
+                  />
+                ))}
+              </div>
+            ) : (
+              <p className="text-xs tracking-widest uppercase text-ink-300">No rooms available.</p>
+            )}
+          </div>
         </div>
       </main>
     </div>
@@ -179,5 +197,3 @@ const HotelDetailPage = () => {
 };
 
 export default HotelDetailPage;
-
-

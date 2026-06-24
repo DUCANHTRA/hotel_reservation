@@ -12,7 +12,6 @@ const HomePage = () => {
     <div className="min-h-screen bg-white text-ink">
       <Navbar />
 
-      {/* Hero */}
       <section className="relative h-[70vh] min-h-[500px] flex items-center justify-center overflow-hidden bg-ink">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-60"
@@ -42,7 +41,6 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Featured Hotels */}
       <section className="max-w-7xl mx-auto px-6 py-24 md:py-32">
         <div className="mb-16">
           <p className="text-xs tracking-[0.25em] uppercase text-ink-300">Curated selections</p>
@@ -76,7 +74,6 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Philosophy */}
       <section className="bg-paper px-6 py-24 md:py-32">
         <div className="max-w-readable mx-auto text-center">
           <p className="text-xs tracking-[0.3em] uppercase text-ink-300">Our ethos</p>

@@ -20,36 +20,39 @@ const BookingCard = ({ booking }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow p-4 flex flex-col">
+    <div className="bg-paper p-5 flex flex-col">
       {booking.hotel && (
-        <Link to={`/hotels/${booking.hotel.id}`} className="text-xl font-bold text-blue-600 hover:underline mb-1">
+        <Link to={`/hotels/${booking.hotel.id}`} className="text-sm font-bold tracking-wider text-ink uppercase hover:text-ink-300 transition-colors duration-300">
           {booking.hotel.name}
         </Link>
       )}
-      {booking.hotel && <p className="text-gray-600 text-sm mb-2">{booking.hotel.location}</p>}
-      {booking.room && <p className="text-gray-700 font-semibold mb-2">Room Type: {booking.room.type}</p>}
-      
-      <p className="text-gray-600 text-sm mb-1">Check-in: {booking.checkInDate}</p>
-      <p className="text-gray-600 text-sm mb-1">Check-out: {booking.checkOutDate}</p>
-      <p className="text-gray-600 text-sm mb-1">Guests: {booking.numberOfGuests}</p>
-      <p className="text-gray-600 text-sm mb-1">Total Price: <span className="font-bold text-green-700">${booking.totalPrice}</span></p>
-      <p className="text-gray-600 text-sm mb-4">Status: <span className={`font-bold ${booking.status === 'confirmed' ? 'text-green-600' : 'text-red-600'}`}>{booking.status}</span></p>
-      
+      {booking.hotel && <p className="text-xs text-ink-300 mt-1">{booking.hotel.location}</p>}
+      {booking.room && <p className="text-xs text-ink mt-2">{booking.room.type}</p>}
+
+      <div className="mt-3 space-y-1 text-xs text-ink-300">
+        <p>Check-in: {booking.checkInDate}</p>
+        <p>Check-out: {booking.checkOutDate}</p>
+        <p>Guests: {booking.numberOfGuests}</p>
+        <p>Total: <span className="text-ink font-bold">${booking.totalPrice}</span></p>
+        <p>
+          Status:{' '}
+          <span className={`${booking.status === 'confirmed' ? 'text-ink' : 'text-ink-200'}`}>
+            {booking.status}
+          </span>
+        </p>
+      </div>
+
       {cancelMessage.text && (
-        <div className={`p-2 text-sm rounded-md mb-2 ${
-          cancelMessage.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-        }`}>
-          {cancelMessage.text}
-        </div>
+        <p className="text-xs text-ink-300 mt-3">{cancelMessage.text}</p>
       )}
 
       {booking.status === 'confirmed' && (
         <button
           onClick={handleCancelBooking}
-          className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 mt-auto"
+          className="mt-4 text-xs tracking-widest uppercase border border-ink-200 px-3 py-1.5 text-ink-300 hover:border-ink hover:text-ink transition-colors duration-300 self-start"
           disabled={isCancelling}
         >
-          {isCancelling ? 'Cancelling...' : 'Cancel Booking'}
+          {isCancelling ? 'Cancelling...' : 'Cancel'}
         </button>
       )}
     </div>
